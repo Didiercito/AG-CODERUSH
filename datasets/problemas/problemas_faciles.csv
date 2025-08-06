@@ -1,0 +1,11 @@
+id,nombre,descripcion,tipo,nivel_dificultad,puntos_base,multiplicador_dificultad,bonus_tiempo,habilidades_requeridas,tiempo_limite,memoria_limite,fuente,año_competencia,tasa_resolucion_historica,problemas_prerequisito,problemas_relacionados,lenguajes_recomendados,penalizacion_tiempo
+1,Suma de dos números,Dados dos números enteros calcular su suma,busqueda,muy_facil,100,1.0,20,algoritmos_basicos:0.8;python:0.5,30,64,Codeforces,2023,0.95,,2;3,Python;Java,5
+2,Encontrar el máximo,Encontrar el número máximo en una lista de enteros usando búsqueda lineal,busqueda,facil,150,1.2,30,algoritmos_basicos:0.7;estructuras_datos:0.3,45,128,AtCoder,2023,0.88,,1;4,Python;Java;C++,10
+3,Contar vocales,Contar el número de vocales en una cadena de texto mediante recorrido,busqueda,facil,120,1.1,25,strings:0.8;python:0.4,40,64,UVa,2022,0.92,,1;5,Python;Java,8
+4,Ordenamiento burbuja,Implementar algoritmo de ordenamiento burbuja por intercambio,optimizacion,facil,180,1.3,35,algoritmos_basicos:0.9;estructuras_datos:0.6,60,128,SPOJ,2023,0.82,2,6;7,C++;Java;Python,15
+5,Palíndromo simple,Verificar si una palabra es palíndromo usando comparación de caracteres,busqueda,facil,140,1.2,30,strings:0.9;algoritmos_basicos:0.4,50,64,Codeforces,2023,0.87,,3;8,Python;Java;C++,12
+6,Búsqueda lineal,Buscar un elemento en un arreglo usando recorrido secuencial,busqueda,muy_facil,110,1.0,20,algoritmos_basicos:0.8;estructuras_datos:0.5,35,64,Educational,2024,0.93,,2;4,Python;Java,7
+7,Factorial iterativo,Calcular el factorial de un número usando multiplicación iterativa,matematica,facil,160,1.2,30,matematicas:0.7;algoritmos_basicos:0.6,45,64,Contest Math,2023,0.85,,9;10,Python;Java;C++,10
+8,Inversión de cadena,Invertir una cadena de caracteres por intercambio de posiciones,optimizacion,muy_facil,100,1.0,20,strings:0.8;python:0.3,30,64,Basic Problems,2024,0.94,,3;5,Python;Java,5
+9,Números pares,Imprimir números pares del 1 al N usando iteración y filtrado,busqueda,muy_facil,90,1.0,15,matematicas:0.6;algoritmos_basicos:0.5,25,32,Elementary,2024,0.96,,7;11,Python;Java,3
+10,Suma de dígitos,Calcular suma de dígitos usando división y módulo matemático,matematica,facil,130,1.1,25,matematicas:0.8;algoritmos_basicos:0.4,40,64,Number Theory,2023,0.89,,7;9,Python;Java;C++,8
