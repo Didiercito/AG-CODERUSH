@@ -238,3 +238,6 @@ def _calcular_nivel_complejidad(problema) -> str:
         return "Intermedio"
     else:
         return "Avanzado"
+    
+    
+#from fastapi.responses import JSONResponse
