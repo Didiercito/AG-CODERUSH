@@ -197,4 +197,4 @@ class AlgoritmoGeneticoCoderush:
             problema = self.problemas[asig['problema_idx']]
             participante = self.participantes[asig['participante_idx']]
             detalle_final.append({'problema_nombre': problema['nombre'], 'participante_nombre': participante['nombre'], 'compatibilidad': asig['compatibilidad'], 'tiempo_estimado': asig['tiempo_estimado'], 'puntuacion_esperada': asig['puntuacion_esperada']})
-        return {'solucion_id': idx + 1, 'fitness': round(solucion.fitness, 6), 'asignaciones_detalle': detalle_final}
+        return {'solucion_id': idx + 1, 'fitness': round(solucion.fitness), 'asignaciones_detalle': detalle_final}
