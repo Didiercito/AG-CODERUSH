@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
+
 import logging
 import numpy as np
 import random
@@ -16,7 +17,7 @@ def ejecutar_estrategia(problemas, participantes, config, pesos):
         configuracion_competencia=config,
         pesos_estrategia=pesos
     )
-    return algoritmo.ejecutar()
+    return algoritmo.iniciar_optimizacion()
 
 @router.post("/optimizar")
 async def optimizar_asignaciones(request: AsignacionRequest):
@@ -42,12 +43,12 @@ async def optimizar_asignaciones(request: AsignacionRequest):
         for i, estrategia in enumerate(estrategias):
             logger.info(f"Ejecutando: {estrategia['nombre']}")
             
-            # Excluir a algunos participantes ya usados para forzar la diversidad
-            participantes_disponibles = [p for p in participantes_originales if p['nombre'] not in participantes_usados_globalmente]
+            participantes_disponibles = [p for p in participantes_originales if p.get('nombre') not in participantes_usados_globalmente]
             if len(participantes_disponibles) < config.tamanio_equipo:
-                participantes_disponibles = participantes_originales # Fallback si no hay suficientes
+                participantes_disponibles = participantes_originales
             
-            participantes_disponibles.sort(key=lambda p: p.get('tasa_exito_historica', 0.5), reverse=True)
+            # <<< CAMBIO CLAVE: Ordenamiento robusto que convierte a float antes de comparar.
+            participantes_disponibles.sort(key=lambda p: float(p.get('tasa_exito_historica', 0.0)), reverse=True)
             equipo_seleccionado = participantes_disponibles[:config.tamanio_equipo]
 
             resultado = ejecutar_estrategia(problemas_originales, equipo_seleccionado, config, estrategia['pesos'])
@@ -57,12 +58,12 @@ async def optimizar_asignaciones(request: AsignacionRequest):
                 mejor_solucion['nombre_estrategia'] = estrategia['nombre']
                 soluciones_finales.append(mejor_solucion)
                 
-                # Añadir los 2 mejores participantes de esta solución a la lista de exclusión para la siguiente
-                if i < len(estrategias) - 1: # No excluir en la última iteración
+                if i < len(estrategias) - 1:
                     asignaciones = mejor_solucion.get('asignaciones_detalle', [])
                     asignaciones.sort(key=lambda x: x.get('compatibilidad', 0), reverse=True)
                     for asig in asignaciones[:2]:
-                        participantes_usados_globalmente.add(asig['participante_nombre'])
+                        if asig.get('participante_nombre'):
+                            participantes_usados_globalmente.add(asig['participante_nombre'])
 
         if not soluciones_finales:
             raise HTTPException(status_code=500, detail="Ninguna estrategia pudo generar una solución válida.")
@@ -78,7 +79,7 @@ async def optimizar_asignaciones(request: AsignacionRequest):
                     'puntuacion_total_esperada': round(puntuacion, 2),
                     'tiempo_total_estimado': int(tiempo),
                     'compatibilidad_promedio': round(compatibilidad_prom, 1),
-                    'participantes_utilizados': len(set(a['participante_nombre'] for a in asignaciones)),
+                    'participantes_utilizados': len(set(a.get('participante_nombre') for a in asignaciones)),
                 }
             solucion['estadisticas'] = stats
 
