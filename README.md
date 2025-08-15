@@ -1,50 +1,50 @@
 # 🚀 CODERUSH - Sistema de Optimización Genética
 
-Sistema avanzado de optimización con algoritmo genético para competencias de programación, hackathons y asignación de tareas en equipos de desarrollo.
+Sistema inteligente de optimización con algoritmo genético para competencias de programación y asignación de equipos.
 
 ## 📋 Características Principales
 
-✅ **Sistema de Habilidades Avanzado**
-- 20+ tipos de habilidades técnicas y blandas
-- Niveles, experiencia y proyectos por habilidad
-- Cálculo automático de compatibilidad problema-participante
+✅ **Algoritmo Genético Puro**
+- Optimización multi-objetivo sin penalizaciones
+- 4 objetivos principales: puntuación, fortalezas, problemas resueltos, tiempo
+- Población adaptativa con estrategias diversas
 
-✅ **Algoritmo Genético Robusto**
-- Población de 100 individuos con estrategias diversas
-- Cruce y mutación inteligentes que respetan restricciones
-- Optimización multi-objetivo con pesos configurables
+✅ **Carga de Datos CSV**
+- Interfaz para cargar participantes y problemas desde archivos CSV
+- Validación automática de estructura de datos
+- Procesamiento robusto con manejo de errores
 
-✅ **API REST Completa**
+✅ **API REST Simplificada**
 - FastAPI con documentación automática
-- Endpoints para asignación, simulación y análisis
-- Validación robusta de entrada y manejo de errores
+- Endpoint principal de optimización
+- Métricas y análisis de convergencia
 
-✅ **Restricciones Inteligentes**
-- Un problema por participante (restricción crítica)
-- Validación de tiempo disponible
-- Prerrequisitos de problemas
-- Disponibilidad de participantes
+✅ **Interfaz Visual Completa**
+- Dashboard interactivo para configuración
+- Visualización de las 3 mejores soluciones
+- Gráficas de convergencia del algoritmo genético
 
 ## 🏗️ Estructura del Proyecto
 
 ```
-coderush/
-├── main.py                     # Punto de entrada FastAPI
+code-rush-back/
+├── main.py                     # Aplicación FastAPI
 ├── config.py                   # Configuración del sistema
 ├── requirements.txt            # Dependencias
+├── datasets/                   # Archivos CSV de ejemplo
+│   ├── participantes_principiantes.csv
+│   └── problemas_faciles.csv
 ├── models/                     # Modelos de datos
 │   ├── __init__.py
-│   ├── participante.py         # Modelos de participantes
-│   ├── problema.py             # Modelos de problemas
 │   └── schemas.py              # Esquemas Pydantic
 ├── core/                       # Lógica principal
 │   ├── __init__.py
-│   ├── enums.py               # Enumeraciones
-│   ├── evaluador.py           # Evaluación de fitness
-│   └── algoritmo_genetico.py  # Algoritmo genético
-└── api/                       # Endpoints API
+│   └── algoritmo_genetico.py   # Algoritmo genético completo
+└── api/                        # Endpoints API
     ├── __init__.py
-    └── routes.py              # Rutas FastAPI
+    └── routes/
+        ├── __init__.py
+        └── asignaciones.py     # Endpoint de optimización
 ```
 
 ## 🚀 Instalación y Configuración
@@ -52,7 +52,7 @@ coderush/
 ### 1. Crear entorno virtual
 ```bash
 # Crear carpeta del proyecto
-mkdir coderush && cd coderush
+mkdir coderush-backend && cd coderush-backend
 
 # Crear entorno virtual
 python -m venv venv
@@ -66,7 +66,7 @@ source venv/bin/activate
 
 ### 2. Instalar dependencias
 ```bash
-pip install -r requirements.txt
+pip install fastapi uvicorn numpy pydantic
 ```
 
 ### 3. Ejecutar la aplicación
@@ -75,165 +75,190 @@ python main.py
 ```
 
 ### 4. Acceder a la documentación
+- **Aplicación:** http://localhost:8000
+- **Health Check:** http://localhost:8000/api/health
 - **Swagger UI:** http://localhost:8000/docs
-- **ReDoc:** http://localhost:8000/redoc
-- **API Base:** http://localhost:8000/api/
+
+## 📊 Formato de CSV
+
+### Participantes CSV (mínimo requerido)
+```csv
+id,nombre,email,edad,universidad,habilidad_principal,nivel_habilidad,experiencia_anos,tasa_exito_historica,tiempo_maximo_disponible,disponibilidad
+1,Ana García,ana@email.com,22,Universidad Tech,algoritmos_basicos,0.8,2,0.75,180,true
+```
+
+### Problemas CSV (mínimo requerido)
+```csv
+id,nombre,descripcion,tipo,nivel_dificultad,puntos_base,multiplicador_dificultad,tiempo_limite,habilidades_requeridas,tasa_resolucion_historica
+1,Ordenamiento,Algoritmo de ordenamiento,algoritmos,facil,100,1.2,45,algoritmos_basicos:0.6,0.75
+```
 
 ## 📚 Uso Básico
 
-### 1. Obtener datos de ejemplo
+### 1. Optimizar asignaciones
 ```bash
-GET http://localhost:8000/api/generar-datos-ejemplo
-```
-
-### 2. Crear asignación óptima
-```bash
-POST http://localhost:8000/api/asignar
+POST http://localhost:8000/api/optimizar
 Content-Type: application/json
 
 {
-  "problemas": [...],
-  "participantes": [...],
-  "parametros_ag": {
-    "poblacion_size": 50,
-    "generaciones_max": 100,
-    "prob_cruce": 0.8,
-    "prob_mutacion": 0.15
+  "participantes": [...],  // Datos del CSV
+  "problemas": [...],      // Datos del CSV
+  "configuracion": {
+    "nombre": "Competencia 2025",
+    "tiempo_total_minutos": 300,
+    "tamanio_equipo": 6,
+    "tipo": "Maratón de Código"
   }
 }
 ```
 
-### 3. Simular competencia
+### 2. Obtener métricas de solución
 ```bash
-POST http://localhost:8000/api/simular-competencia
+GET http://localhost:8000/api/metricas/1
 ```
 
-## 🎯 Endpoints Principales
+## 🎯 Endpoints Disponibles
 
 | Endpoint | Método | Descripción |
 |----------|---------|-------------|
-| `/api/asignar` | POST | Crear asignación óptima |
-| `/api/generar-datos-ejemplo` | POST | Generar datos de prueba |
-| `/api/simular-competencia` | POST | Simular competencia completa |
-| `/api/asignaciones` | GET | Listar todas las asignaciones |
-| `/api/asignaciones/{id}` | GET | Obtener asignación específica |
-| `/api/estadisticas-sistema` | GET | Estadísticas del sistema |
+| `/api/optimizar` | POST | Ejecutar algoritmo genético |
+| `/api/metricas/{id}` | GET | Obtener métricas de solución específica |
+| `/api/health` | GET | Estado del servidor |
 
-## 🔧 Configuración Avanzada
+## 🔧 Configuración del Algoritmo
 
-### Parámetros del Algoritmo Genético
-```json
-{
-  "parametros_ag": {
-    "poblacion_size": 100,
-    "generaciones_max": 200,
-    "prob_cruce": 0.8,
-    "prob_mutacion": 0.15,
-    "elitismo_porcentaje": 0.1,
-    "torneo_size": 5
-  }
-}
-```
+### Variables de Optimización (4 objetivos)
+1. **Maximizar Puntuación Total** (40%)
+2. **Maximizar Fortalezas Individuales** (30%)
+3. **Maximizar Problemas Resueltos** (20%)
+4. **Minimizar Tiempo Total** (10%)
 
-### Configuración de Competencia
-```json
-{
-  "configuracion_competencia": {
-    "nombre": "Hackathon 2024",
-    "duracion_total": 300,
-    "peso_puntuacion": 0.4,
-    "peso_compatibilidad": 0.25,
-    "peso_balance_carga": 0.2,
-    "peso_probabilidad_exito": 0.15
-  }
-}
-```
+### Parámetros Adaptativos
+- **Población:** 60-150 individuos (adaptativo)
+- **Generaciones:** 100-150 (adaptativo)
+- **Cruce:** 80%
+- **Mutación:** 25%
+- **Elitismo:** 5%
 
 ## 📊 Ejemplo de Respuesta
 
 ```json
 {
-  "exito": true,
-  "mensaje": "Asignación completada exitosamente",
-  "matriz_asignacion": [[2, 0, 0], [0, 3, 0], [0, 0, 1]],
-  "fitness_final": 0.87,
-  "asignaciones_detalle": [
-    {
-      "problema_nombre": "Ordenamiento Avanzado",
-      "participante_nombre": "Ana García",
-      "compatibilidad": 0.91,
-      "probabilidad_exito": 0.85,
-      "puntuacion_esperada": 127.5
+  "success": true,
+  "mensaje": "Optimización completada. 3 mejores estrategias encontradas.",
+  "top_3_soluciones": {
+    "solucion_1": {
+      "solucion_id": 1,
+      "fitness": 0.4249,
+      "nombre_estrategia": "Estrategia Optimizada 1",
+      "asignaciones_detalle": [
+        {
+          "problema_nombre": "Suma de dos números",
+          "participante_nombre": "Valentina Ruiz",
+          "compatibilidad": 0.35,
+          "tiempo_estimado": 9.0,
+          "puntuacion_esperada": 56.0
+        }
+      ],
+      "estadisticas": {
+        "puntuacion_total_esperada": 628.37,
+        "tiempo_total_estimado": 41,
+        "compatibilidad_promedio": 28.0,
+        "participantes_utilizados": 6
+      }
     }
-  ],
-  "estadisticas": {
-    "generaciones_ejecutadas": 150,
-    "tiempo_ejecucion_segundos": 2.34,
-    "problemas_asignados": 3,
-    "participantes_utilizados": 3
-  }
+  },
+  "historial": [
+    {
+      "generacion": 0,
+      "mejor_fitness": 0.3215,
+      "fitness_promedio": 0.2487
+    }
+  ]
 }
 ```
-
-## 🎮 Flujo de Trabajo Típico
-
-1. **Definir Participantes:** Crear perfiles con habilidades específicas
-2. **Definir Problemas:** Establecer requerimientos y puntuaciones
-3. **Configurar Competencia:** Ajustar pesos y parámetros
-4. **Ejecutar Optimización:** Usar algoritmo genético
-5. **Analizar Resultados:** Revisar asignaciones y estadísticas
-6. **Simular Competencia:** Probar la asignación en escenario real
 
 ## 🔬 Algoritmo Genético
 
 ### Características Técnicas
-- **Representación:** Matriz de asignación con prioridades
-- **Selección:** Torneo de 5 individuos
-- **Cruce:** Uniforme inteligente que respeta restricciones
-- **Mutación:** Adaptativa con 3 tipos diferentes
-- **Elitismo:** 10% de mejores individuos conservados
+- **Representación:** Matriz problemas x participantes
+- **Selección:** Torneo adaptativo
+- **Cruce:** Un punto con reparación
+- **Mutación:** Intercambio e reasignación
+- **Evaluación:** Sin penalizaciones, algoritmo puro
 
-### Objetivos de Optimización
-1. **Puntuación Esperada** (40%): Maximizar puntos del equipo
-2. **Compatibilidad** (25%): Ajustar habilidades a problemas
-3. **Balance de Carga** (20%): Equilibrar trabajo entre participantes
-4. **Probabilidad de Éxito** (15%): Maximizar chance de resolución
+### Estructura del Individuo
+```python
+class IndividuoGenetico:
+    cromosoma: np.ndarray    # Matriz de asignaciones
+    fitness: float           # Valor de aptitud
+    es_valido: bool         # Cumple restricciones
+    metricas_detalladas: dict # Análisis adicional
+```
+
+## 🎮 Flujo de Trabajo
+
+1. **Preparar Datos:** Crear CSVs de participantes y problemas
+2. **Cargar en Frontend:** Usar botones "Cargar CSV"
+3. **Configurar Competencia:** Establecer nombre, tiempo, tamaño equipo
+4. **Ejecutar Optimización:** Algoritmo genético genera soluciones
+5. **Analizar Resultados:** Revisar TOP 3 soluciones y métricas
+6. **Ver Convergencia:** Gráficas de evolución del algoritmo
 
 ## 🐛 Solución de Problemas
 
-### Error: "No puede haber más problemas que participantes"
-- **Causa:** Restricción del modelo
-- **Solución:** Agregar más participantes o reducir problemas
+### Error: "CSV mal formateado"
+- **Causa:** Faltan columnas requeridas
+- **Solución:** Verificar estructura contra ejemplo en `/datasets/`
 
-### Error: "Debe tener al menos una habilidad definida"
-- **Causa:** Participante sin habilidades
-- **Solución:** Definir al menos una habilidad por participante
+### Error: "Participantes insuficientes"
+- **Causa:** Tamaño equipo > participantes disponibles
+- **Solución:** Reducir tamaño equipo o agregar participantes
 
-### Fitness muy bajo
-- **Causa:** Incompatibilidad entre problemas y participantes
-- **Solución:** Ajustar habilidades o tipos de problemas
+### Fitness bajo consistente
+- **Causa:** Incompatibilidad entre habilidades y problemas
+- **Solución:** Revisar campo `habilidades_requeridas` en problemas
 
 ## 📈 Métricas de Rendimiento
 
-- **Fitness:** 0.0 - 1.0 (mayor es mejor)
-- **Tiempo de convergencia:** Típicamente < 100 generaciones
-- **Diversidad de población:** 0.0 - 1.0 (mayor diversidad = mejor exploración)
-- **Violaciones de restricciones:** 0 para solución válida
+- **Fitness:** 0.0 - 1.0 (sin penalizaciones)
+- **Convergencia:** Típicamente en 50-100 generaciones
+- **Soluciones válidas:** 100% (algoritmo puro)
+- **Diversidad:** TOP 3 soluciones diferentes garantizada
+
+## 🔄 Integración Frontend
+
+El backend está diseñado para trabajar con un frontend React que:
+- Carga archivos CSV de participantes y problemas
+- Envía datos procesados al endpoint `/api/optimizar`
+- Visualiza resultados y métricas de convergencia
+- Permite análisis comparativo de las 3 mejores soluciones
+
+## 📄 Datos de Ejemplo
+
+El proyecto incluye archivos CSV de ejemplo en `/datasets/`:
+- `participantes_principiantes.csv` - 8 participantes con habilidades básicas
+- `problemas_faciles.csv` - 10 problemas de nivel principiante
 
 ## 🤝 Contribución
 
 1. Fork el repositorio
-2. Crear rama para feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit cambios (`git commit -am 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+2. Crear rama para feature (`git checkout -b feature/mejora`)
+3. Commit cambios (`git commit -am 'Descripción del cambio'`)
+4. Push a la rama (`git push origin feature/mejora`)
 5. Crear Pull Request
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detalles.
+Proyecto académico - Universidad Tecnológica
 
-## 🔗 Enlaces Útiles
+## 🎯 Objetivos Académicos
 
-- [Documentación FastAPI](https://fastapi.tiangolo.com/)
-- [Algoritmos Genéticos](https://en.wikipedia.org/wiki/Genetic_algorithm)
-- [Optimización Multi-objetivo](https://en.wikipedia.org/wiki/Multi-objective_optimization)
+Este proyecto demuestra:
+- ✅ Implementación completa de algoritmo genético
+- ✅ API REST con FastAPI
+- ✅ Procesamiento de datos CSV
+- ✅ Optimización multi-objetivo
+- ✅ Validación robusta de datos
+- ✅ Interfaz visual funcional
+- ✅ Documentación técnica completa
